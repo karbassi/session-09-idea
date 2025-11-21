@@ -393,8 +393,8 @@ function getNewBookingAdminTemplate(data: NotificationData): EmailTemplate {
             </div>
             
             <div style="text-align: center; margin: 30px 0;">
-              <a href="${process.env.NEXT_PUBLIC_APP_URL || ''}/admin/bookings/${booking.id}" class="action-button">View Booking Details</a>
-              <a href="${process.env.NEXT_PUBLIC_APP_URL || ''}/admin/bookings" class="action-button">Go to Dashboard</a>
+              <a href="${data.baseUrl || process.env.NEXT_PUBLIC_APP_URL || ''}/admin/bookings/${booking.id}" class="action-button">View Booking Details</a>
+              <a href="${data.baseUrl || process.env.NEXT_PUBLIC_APP_URL || ''}/admin/bookings" class="action-button">Go to Dashboard</a>
             </div>
             
             <p><strong>Next Steps:</strong></p>
@@ -437,8 +437,8 @@ Next Steps:
 3. Approve or request more information
 4. Client will be notified once you take action
 
-View booking: ${process.env.NEXT_PUBLIC_APP_URL || ''}/admin/bookings/${booking.id}
-Go to dashboard: ${process.env.NEXT_PUBLIC_APP_URL || ''}/admin/bookings
+View booking: ${data.baseUrl || process.env.NEXT_PUBLIC_APP_URL || ''}/admin/bookings/${booking.id}
+Go to dashboard: ${data.baseUrl || process.env.NEXT_PUBLIC_APP_URL || ''}/admin/bookings
   `;
   
   return { subject, html, text };

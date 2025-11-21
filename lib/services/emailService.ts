@@ -66,7 +66,10 @@ export class EmailService {
     const templateId = this.config.emailjs.templates[type];
     
     if (!templateId) {
-      throw new Error(`EmailJS template not found for type: ${type}`);
+      const availableTemplates = Object.keys(this.config.emailjs.templates).join(', ');
+      throw new Error(
+        `EmailJS template not found for type: ${type}. Available templates: ${availableTemplates}`
+      );
     }
 
     const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
@@ -123,6 +126,8 @@ export class EmailService {
       throw new Error('SendGrid configuration is missing');
     }
 
+    // Dynamic import to avoid bundling SendGrid in client-side code
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const sgMail = require('@sendgrid/mail');
     sgMail.setApiKey(this.config.sendgrid.apiKey);
 

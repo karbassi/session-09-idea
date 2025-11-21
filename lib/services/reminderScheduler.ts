@@ -32,7 +32,15 @@ export class ReminderScheduler {
    * @returns Scheduled reminder information
    */
   scheduleReminder(data: NotificationData): ScheduledReminder {
-    const appointmentDate = new Date(`${data.booking.date}T${data.booking.startTime}`);
+    // Parse appointment date and time, assuming local timezone
+    // In production, consider storing timezone with bookings
+    const appointmentDate = new Date(`${data.booking.date}T${data.booking.startTime}:00`);
+    
+    // Validate date
+    if (isNaN(appointmentDate.getTime())) {
+      throw new Error(`Invalid appointment date/time: ${data.booking.date} ${data.booking.startTime}`);
+    }
+    
     const hoursBeforeReminder = this.preferences.reminderHoursBefore || 24;
     const reminderTime = new Date(appointmentDate.getTime() - (hoursBeforeReminder * 60 * 60 * 1000));
     

@@ -45,6 +45,7 @@ export interface NotificationData {
     phone?: string;
     qrCodeUrl?: string;
   };
+  baseUrl?: string; // Application base URL for links in notifications
 }
 
 export interface EmailTemplate {

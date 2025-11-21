@@ -20,6 +20,8 @@ export class SMSService {
     
     // Initialize Twilio client
     if (config.provider === 'twilio') {
+      // Dynamic import to avoid bundling Twilio in client-side code
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
       const twilio = require('twilio');
       this.client = twilio(
         config.twilio.accountSid,
