@@ -1,310 +1,176 @@
-Hairstylist Booking Platform
+# Hairstylist Booking Platform
+
+A professional booking platform for independent mobile hairstylists, featuring Zelle payment integration and admin approval workflow.
+
+## Features
+
+### Client Features
+- **Easy Booking Flow**: Multi-step booking process with intuitive interface
+- **Zelle Payment**: Simple deposit payment via Zelle with QR code
+- **Receipt Upload**: Drag-and-drop receipt screenshot upload
+- **Booking Confirmation**: Email confirmation and booking tracking
+
+### Admin Features
+- **Dashboard**: Overview of pending, confirmed, and total bookings
+- **Pending Approvals**: Review and approve bookings with receipt verification
+- **Booking Management**: View all bookings with filtering by status
+- **Receipt Verification**: View uploaded payment receipts before approval
+
+## Tech Stack
+
+- **Frontend**: Next.js 16 (App Router), TypeScript, Tailwind CSS v4
+- **Backend**: Supabase (PostgreSQL database + Storage)
+- **File Upload**: react-dropzone
+- **Icons**: lucide-react
+- **QR Codes**: qrcode.react
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+ installed
+- A Supabase account
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/karbassi/session-09-idea.git
+cd session-09-idea
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Set up Supabase:
+   - Follow the instructions in [SUPABASE_SETUP.md](./SUPABASE_SETUP.md)
+   - Create a `.env.local` file with your Supabase credentials:
+   ```bash
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
+
+4. Run the development server:
+```bash
+npm run dev
+```
+
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+### Building for Production
+
+```bash
+npm run build
+npm run start
+```
+
+## Project Structure
+
+```
+session-09-idea/
+├── app/
+│   ├── admin/               # Admin dashboard pages
+│   │   ├── all-bookings/   # All bookings management
+│   │   └── page.tsx        # Main dashboard
+│   ├── booking/            # Client booking flow
+│   │   └── page.tsx        # Multi-step booking page
+│   ├── layout.tsx          # Root layout
+│   ├── page.tsx            # Home page
+│   └── globals.css         # Global styles
+├── components/
+│   ├── BookingForm.tsx     # Client booking form
+│   ├── PendingBookings.tsx # Admin pending approvals
+│   ├── ReceiptUpload.tsx   # Receipt upload component
+│   └── ZelleInstructions.tsx # Zelle payment instructions
+├── lib/
+│   ├── supabase.ts         # Supabase client & types
+│   └── utils.ts            # Utility functions
+├── ARCHITECTURE.md         # Original project architecture
+├── DATABASE_SCHEMA.md      # Database schema documentation
+└── SUPABASE_SETUP.md       # Supabase setup guide
+```
 
-**The Problem:** Independent mobile hairstylists face a dilemma when setting up online booking systems. Most platforms require linking bank accounts or SSN for payment processing, which creates privacy concerns and financial risk exposure. This forces many solo entrepreneurs to rely on manual booking through texts and calls, leading to double bookings, missed appointments, and unprofessional client experience.
+## User Flows
 
-**Who It's For:**
+### Client Booking Flow
 
-- Primary: Independent mobile hairstylists who want professional booking without financial integration
-- Secondary: Their clients who need an easy way to book services and send deposits
+1. **Booking Details**: Fill out booking form with personal information
+2. **Payment Instructions**: View Zelle payment details and QR code
+3. **Upload Receipt**: Upload payment confirmation screenshot
+4. **Confirmation**: Receive booking reference and wait for approval
 
-**Why This Matters:**
+### Admin Approval Flow
 
-- Enables small business professionalism without compromising financial privacy
-- Reduces administrative burden of manual scheduling
-- Prevents double-bookings and scheduling conflicts
-- Creates better client experience with confirmations and reminders
+1. **Dashboard**: View statistics and pending bookings
+2. **Review Booking**: Check client details and view receipt
+3. **Approve/Reject**: Approve or reject the booking
+4. **Status Update**: Booking status is updated automatically
 
-***
+## Database Schema
 
-**Complete Site Architecture**
+See [DATABASE_SCHEMA.md](./DATABASE_SCHEMA.md) for complete database schema including:
+- Services table
+- Clients table
+- Bookings table (with `deposit_receipt_url` field)
+- Admin settings table
+- Storage buckets for receipts
 
-**Admin Side (Hairstylist Dashboard)**
+## Phase 2 Implementation
 
-**Pages Needed:**
+This project implements Phase 2 of the booking platform:
 
-1. **Admin Login Page**
+✅ Display Zelle payment instructions with QR code  
+✅ Implement receipt/screenshot upload functionality using react-dropzone  
+✅ Configure Supabase Storage for receipt images  
+✅ Create admin approval workflow interface  
+✅ Add booking status management (pending/confirmed/rejected)  
+✅ Build receipt verification page for admin  
+✅ Update bookings table with deposit_receipt_url field  
+✅ Create "Pending Bookings" section in admin dashboard  
+✅ Implement booking approval/rejection actions  
+✅ Add deposit received marking functionality  
 
-   - Secure authentication
-   - Password reset option
+## Deployment
 
-2. **Dashboard/Home**
+### Deploy to Vercel
 
-   - Today's appointments overview
-   - Pending bookings requiring approval
-   - Quick stats (upcoming appointments, pending deposits, revenue)
+1. Push your code to GitHub
+2. Import project in Vercel
+3. Add environment variables in Vercel dashboard
+4. Deploy
 
-3. **Calendar View**
+### Environment Variables
 
-   - Month/week/day views
-   - Color-coded appointments by service type
-   - Blocked time slots visible
-   - Click to see appointment details
+Required environment variables:
+- `NEXT_PUBLIC_SUPABASE_URL`: Your Supabase project URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase anonymous key
 
-4. **Services Management**
+## Security Notes
 
-   - Add/edit/delete services
-   - Fields: Service name, description, duration, price, image
-   - Active/inactive toggle
+- Never commit `.env.local` to version control
+- Set up Row Level Security (RLS) policies in Supabase
+- Consider adding authentication for admin dashboard in production
+- Review and test all security policies before going live
 
-5. **Bookings Management**
+## Future Enhancements
 
-   - List of all bookings (upcoming, past, pending)
-   - Filter by status, date, service
-   - View client details
-   - Mark deposit as received
-   - Approve/reject bookings
-   - View receipt screenshots
+- Email notifications for booking confirmations
+- SMS reminders
+- In-app messaging between client and stylist
+- Calendar view for admin
+- Service management interface
+- Client portal to view booking history
 
-6. **Messages Center**
+## Contributing
 
-   - Inbox for client messages
-   - Send messages to clients
-   - Thread view by client
+This is a class project. For contributions, please fork the repository and submit a pull request.
 
-7. **Business Settings**
+## License
 
-   - Zelle information display
-   - Business hours
-   - Booking rules (advance notice required, etc.)
-   - Email/phone for notifications
-   - Service area/travel radius
+ISC
 
-8. **Client Database**
+## Author
 
-   - List of all clients
-   - Client history
-   - Contact information
-   - Notes section
-
-**Client Side (Public Facing)**
-
-**Pages Needed:**
-
-1. **Homepage/Landing**
-
-   - Hero section with business intro
-   - Featured services
-   - About the stylist
-   - Call-to-action to book
-   - Contact information
-
-2. **Services Page**
-
-   - Grid/list of all services
-   - Service cards showing: name, duration, price, description, image
-   - "Book Now" button on each
-
-3. **Booking Flow Page**
-
-   - Step 1: Service selection
-   - Step 2: Date & time selection (calendar with blocked times)
-   - Step 3: Client information form
-   - Step 4: Deposit payment instructions
-   - Step 5: Upload receipt/screenshot
-   - Step 6: Confirmation
-
-4. **Client Information Form Fields:**
-
-   - Full name
-   - Email address
-   - Phone number
-   - Service address (where stylist should come)
-   - Hair type/length
-   - Special requests/notes
-   - Preferred contact method
-
-5. **My Bookings Page** (Client Portal)
-
-   - View upcoming appointments
-   - View past appointments
-   - Cancel/reschedule options
-   - Upload missing receipts
-
-6. **Messaging Page**
-
-   - Send message to stylist
-   - View conversation history
-
-7. **Confirmation Page**
-
-   - Booking summary
-   - Next steps (deposit instructions)
-   - Add to calendar option
-
-***
-
-**User Flows & Touch Points**
-
-**Client Booking Flow:**
-
-Homepage → Services → Select Service → Choose Date/Time →
-
-Fill Client Form → Deposit Instructions → Upload Receipt →
-
-Confirmation → Email/SMS Confirmation
-
-**Admin Management Flow:**
-
-Login → Dashboard → View Pending Booking → Check Receipt →
-
-Approve Booking → Calendar Updates → Send Confirmation
-
-**Touch Points:**
-
-1. **Email Notifications:**
-
-   - Client: Booking confirmation, appointment reminder, deposit instructions
-   - Admin: New booking alert, appointment reminder
-
-2. **SMS Notifications:**
-
-   - Client: Booking confirmation, 24hr reminder
-   - Admin: New booking alert
-
-3. **In-App Messaging:**
-   - Both parties can communicate
-
-4. **Calendar:**
-
-   - Real-time availability updates
-   - Blocked time management
-
-***
-
-**Technical Architecture & Tools**
-
-**Frontend (Client & Admin UI):**
-
-- **Framework:** React with Next.js
-
-  - Why: Modern, fast, good for SEO, easy deployment
-  - Server-side rendering for better performance
-
-**Backend & Database:**
-
-- **Supabase**
-
-  - PostgreSQL database
-  - Built-in authentication
-  - Storage for images
-  - Real-time subscriptions
-  - Why: More traditional SQL, open-source
-
-**Calendar Management:**
-
-- **react-calendar** or **FullCalendar**
-- Custom logic for blocking booked time slots
-
-**File Upload:**
-
-- **react-dropzone** for receipt uploads
-- Store in Firebase Storage or Supabase Storage
-
-**Notifications:**
-
-- **Email:** EmailJS or SendGrid API
-- **SMS:** Twilio API (for SMS notifications)
-
-**Payment Instructions:**
-
-- Display Zelle QR code or Zelle information
-- No actual payment processing needed
-
-**Deployment:**
-
-- **Vercel** (best for Next.js)
-- Free tier, automatic deployments from GitHub
-
-**Styling:**
-
-- **Tailwind CSS** - Fast, responsive, professional
-- **Shadcn/ui** - Pre-built components
-
-***
-
-**AI Tools Usage (For Documentation)**
-
-Document how you'll use AI in your process:
-
-1. **Ideation & Research:**
-
-   - Claude/ChatGPT for brainstorming features
-   - Understanding booking system requirements
-   - Researching competitors
-
-2. **UX/UI Design:**
-
-   - AI for user flow suggestions
-   - Wireframe feedback
-   - Accessibility considerations
-
-3. **Code Generation:**
-
-   - Claude for React components
-   - Firebase setup code
-   - Calendar logic implementation
-
-4. **Testing & Debugging:**
-
-   - AI for bug identification
-   - Code optimization suggestions
-   - Edge case identification
-
-5. **Content Creation:**
-
-   - Service descriptions
-   - Email templates
-   - User instructions
-
-***
-
-**Database**
-
-**Collections/Tables Needed:**
-
-1. **services**
-   - id, name, description, duration, price, image\_url, active, created\_at
-2. **bookings**
-   - id, client\_id, service\_id, date, start\_time, end\_time, status (pending/confirmed/completed/cancelled), deposit\_receipt\_url, created\_at
-3. **clients**
-   - id, name, email, phone, address, hair\_info, notes, created\_at
-4. **messages**
-   - id, booking\_id, sender (client/admin), message, timestamp, read
-5. **admin\_settings**
-   - zelle\_info, business\_hours, notification\_email, notification\_phone
-6. **blocked\_times**
-   - id, date, start\_time, end\_time, reason
-
-***
-
-**Next Steps - Development Phases**
-
-**Phase 1: Core MVP**
-
-- Admin can add services
-- Clients can view services
-- Basic booking form
-- Calendar with time blocking
-
-**Phase 2: Deposit System**
-
-- Zelle instructions display
-- Receipt upload functionality
-- Admin approval workflow
-
-**Phase 3: Notifications**
-
-- Email confirmations
-- Booking reminders
-
-**Phase 4: Messaging & Polish**
-
-- In-app messaging
-- UI refinements
-- Mobile responsiveness
-
-**Phase 5: Testing & Documentation**
-
-- User testing
-- Process documentation
-- Demo preparation
+Created as part of Session 09 coursework.
