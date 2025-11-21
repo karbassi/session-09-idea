@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { supabase } from '@/lib/supabase';
 import { Upload, CheckCircle, XCircle } from 'lucide-react';
@@ -16,11 +16,23 @@ export default function ReceiptUpload({ bookingId, onSuccess }: ReceiptUploadPro
   const [error, setError] = useState('');
   const [preview, setPreview] = useState<string | null>(null);
 
+  // Clean up object URL on unmount
+  useEffect(() => {
+    return () => {
+      if (preview) {
+        URL.revokeObjectURL(preview);
+      }
+    };
+  }, [preview]);
+
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (!file) return;
 
-    // Create preview
+    // Create preview and clean up previous one
+    if (preview) {
+      URL.revokeObjectURL(preview);
+    }
     const objectUrl = URL.createObjectURL(file);
     setPreview(objectUrl);
 

@@ -44,9 +44,13 @@ export default function BookingForm({ onSuccess }: BookingFormProps) {
 
       if (clientError) throw clientError;
 
-      // Calculate end time (assuming 2 hour duration for now)
+      // Calculate end time
+      // TODO: In production, this should be calculated based on the selected service's duration
+      // For now, using a 2-hour default duration
       const startHour = parseInt(formData.startTime.split(':')[0]);
-      const endTime = `${String(startHour + 2).padStart(2, '0')}:${formData.startTime.split(':')[1]}`;
+      const startMinute = parseInt(formData.startTime.split(':')[1]);
+      const endHour = startHour + 2;
+      const endTime = `${String(endHour).padStart(2, '0')}:${String(startMinute).padStart(2, '0')}`;
 
       // Create booking
       const { data: booking, error: bookingError } = await supabase

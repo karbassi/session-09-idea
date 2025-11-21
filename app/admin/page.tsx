@@ -14,6 +14,7 @@ interface Stats {
 export default function AdminDashboard() {
   const [stats, setStats] = useState<Stats>({ pending: 0, confirmed: 0, total: 0 });
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     fetchStats();
@@ -21,10 +22,13 @@ export default function AdminDashboard() {
 
   const fetchStats = async () => {
     setLoading(true);
+    setError('');
     try {
-      const { data: allBookings } = await supabase
+      const { data: allBookings, error: fetchError } = await supabase
         .from('bookings')
         .select('status');
+
+      if (fetchError) throw fetchError;
 
       if (allBookings) {
         const pending = allBookings.filter(b => b.status === 'pending').length;
@@ -35,8 +39,9 @@ export default function AdminDashboard() {
           total: allBookings.length,
         });
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error fetching stats:', err);
+      setError('Failed to load dashboard statistics. Please check your connection.');
     } finally {
       setLoading(false);
     }
@@ -52,6 +57,12 @@ export default function AdminDashboard() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 py-8">
+        {error && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+            {error}
+          </div>
+        )}
+
         {/* Stats Cards */}
         <div className="grid gap-6 md:grid-cols-3 mb-8">
           <div className="bg-white p-6 rounded-lg shadow-md">

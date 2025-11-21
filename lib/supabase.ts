@@ -1,7 +1,13 @@
 import { createClient } from '@supabase/supabase-js';
 
+// Use placeholder values for build-time, but warn in development
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key';
+
+// Warn if using placeholder values in browser
+if (typeof window !== 'undefined' && supabaseUrl === 'https://placeholder.supabase.co') {
+  console.warn('⚠️ Supabase is not configured. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in .env.local');
+}
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 

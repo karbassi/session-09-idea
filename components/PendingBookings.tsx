@@ -10,6 +10,7 @@ export default function PendingBookings() {
   const [loading, setLoading] = useState(true);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [processingId, setProcessingId] = useState<string | null>(null);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     fetchPendingBookings();
@@ -17,6 +18,7 @@ export default function PendingBookings() {
 
   const fetchPendingBookings = async () => {
     setLoading(true);
+    setError('');
     try {
       const { data, error } = await supabase
         .from('bookings')
@@ -52,7 +54,7 @@ export default function PendingBookings() {
       setSelectedBooking(null);
     } catch (err) {
       console.error('Error approving booking:', err);
-      alert('Failed to approve booking');
+      setError('Failed to approve booking. Please try again.');
     } finally {
       setProcessingId(null);
     }
@@ -62,6 +64,7 @@ export default function PendingBookings() {
     if (!confirm('Are you sure you want to reject this booking?')) return;
 
     setProcessingId(bookingId);
+    setError('');
     try {
       const { error } = await supabase
         .from('bookings')
@@ -75,7 +78,7 @@ export default function PendingBookings() {
       setSelectedBooking(null);
     } catch (err) {
       console.error('Error rejecting booking:', err);
-      alert('Failed to reject booking');
+      setError('Failed to reject booking. Please try again.');
     } finally {
       setProcessingId(null);
     }
@@ -102,6 +105,12 @@ export default function PendingBookings() {
   return (
     <div>
       <h2 className="text-2xl font-bold mb-6">Pending Bookings</h2>
+
+      {error && (
+        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+          {error}
+        </div>
+      )}
 
       <div className="grid gap-4">
         {bookings.map((booking) => (
